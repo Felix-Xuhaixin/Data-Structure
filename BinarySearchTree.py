@@ -33,10 +33,10 @@ class BinarySearchTree:
         
 
     def __iter__(self):
-        pass
+        yield from self._in_order_traversal(self.root)
 
     def __repr__(self):
-        pass
+        return str(list(self._in_order_traversal(self.root)))
 
     def insert(self, key, value):
         if self.root is None:
@@ -96,7 +96,15 @@ class BinarySearchTree:
         self._delete(node)
 
     def traverse(self, order):
-        pass
+        if order == 'inorder':
+            yield from self._in_order_traversal(self.root)
+        elif order == 'preorder':
+            yield from self._pre_order_traversal(self.root)
+        elif order == 'postorder':
+            yield from self._post_order_traversal(self.root)
+        else:
+            print("Unknown Order")
+
 
     def _delete(self,node):  # helper fuction to delete() function
         # Node is leaf node 
@@ -120,8 +128,13 @@ class BinarySearchTree:
             child_node.parent = node.parent
             
             node.parent = node.left = node.right = None
-        else:     # Node has two child nodes
-            pass
+        else:     # Node has two child nodes 
+            successor = self._successor(node)
+
+            node.key = successor.key
+            node.value = successor.value
+
+            self._delete(successor)
 
  
                     
@@ -129,18 +142,87 @@ class BinarySearchTree:
     def _successor(self,node): 
         """
         the smallest node key among the larger node key.
-
+        first go right ,then keep going left until None
         """
-        pass
+        if node is None:
+            print ('cannot find successor of None')
+        else:
+            if node.right is None:
+                return None
+            else:
+                current_node = node.right
+                while current_node.left is not None:
+                    current_node = current_node.left
+                return current_node
+            
+                   
     
     def _predecessor(self,node):
-        pass
+        
+        if node is None:
+            print ('cannot find predecessor of None')
+        else:
+            if node.left is None:
+                return None
+            else:
+                current_node = node.left
+                while current_node.right is not None:
+                    current_node = current_node.right 
+                return current_node
 
-    def _in_order_traversal(self):
-        pass
+
+
+    def _in_order_traversal(self,node):
+        """
+        left -> root -> right
+        from the smallest to the largest
+        ascending order
+        """
+        if node is not None:
+            yield from self._in_order_traversal(node.left)
+            yield (node.key,node.value)
+            yield from self._in_order_traversal(node.right)
+            
  
-    def _pre_order_traversal(self):
-        pass
+    def _pre_order_traversal(self,node):
+        """
+        root -> left -> right
+        """
+        if node is not None:
+            yield (node.key,node.value)
+            yield from self._pre_order_traversal(node.left)
+            yield from self._pre_order_traversal(node.right)
+
+
+    def _post_order_traversal(self,node):
+            
+       if node is not None:
+            yield from self._post_order_traversal(node.left)
+            yield from self._post_order_traversal(node.right)
+            yield (node.key,node.value)
+
+if __name__ == "__main__":
+     bst = BinarySearchTree()
+     bst.insert(10,"Felix")
+     bst.insert(5,"Jia")
+     bst.insert(22,"Liya")
+     bst.insert(2,"Lena")
+     bst.insert(9,"Mia")
+     bst.insert(12,"Stacy")
+     bst.insert(30,"Andrew")
+     bst.insert(11,"Alberto")
+     bst.insert(15,"Autumn")
+     bst.insert(23,"Ellie")
+     bst.insert(35,"Gabbie")
+     bst.insert(11,"Leah")
+     bst.insert(17,"Hallo")
+     bst.insert(29,"Sonya")
+     bst.delete(17)
     
-    def _post_order_traversal(self):
-        pass 
+     for i in bst.traverse('inorder'):
+         print(i)
+
+     print(bst)
+     
+
+
