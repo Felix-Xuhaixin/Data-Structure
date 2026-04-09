@@ -65,10 +65,7 @@ class BinarySearchTree:
                     current_node.value = value
                     break
                     
-
-                    
-                
-                    
+             
 
     def search(self, key):
         current_node =  self.root
@@ -91,15 +88,49 @@ class BinarySearchTree:
 
 
     def delete(self,key):
-        pass
+        node = self.search(key)
+        
+        if node is None:
+            print(KeyError('Node with this key does not exist'))
+
+        self._delete(node)
 
     def traverse(self, order):
         pass
 
-    def _delete(self,key):  # helper fuction to delete() function
-        pass
+    def _delete(self,node):  # helper fuction to delete() function
+        # Node is leaf node 
+
+        if node.left is None and node.right is None: # Node has no child node
+            if node.parent is None:
+                self.node = None
+            else:
+                if node.parent.right is None:
+                    node.parent.left = None
+                else:
+                    node.parent.right = None 
+                node.parent = None
+        elif node.left is None or node.right is None : # Node has only one child node
+         
+            child_node = node.left if node.left is not None else node.right
+            if node.parent.right == node:
+                node.parent.right = child_node
+            else:
+                node.parent.left = child_node
+            child_node.parent = node.parent
+            
+            node.parent = node.left = node.right = None
+        else:     # Node has two child nodes
+            pass
+
+ 
+                    
     
-    def _successor(self,node):
+    def _successor(self,node): 
+        """
+        the smallest node key among the larger node key.
+
+        """
         pass
     
     def _predecessor(self,node):
