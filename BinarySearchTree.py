@@ -1,6 +1,7 @@
-# property: Every key to the left of node is smaller than node, 
-#  every key to the right of node is larger than node
-
+""" 
+property: Every key to the left of node is smaller than node; 
+          Every key to the right of node is larger than node
+"""
 class Node:
     
     def __init__(self,key):
