@@ -96,17 +96,33 @@ class Graph:
         
 
     def bfs(self,start):
-        # visited = set()
-        # queue = [start]
-        # order = []
+    #     # visited = set()
+    #     # queue = [start]
+    #     # order = []
 
-        # while queue:
-        #     node = queue.pop(0)
-        #     if node not in visited:
-        #         visited.add(node)
-        #         order.append(node)
-        #         neighbors = self.get_neighbors(node)
-        pass
+    #     # while queue:
+    #     #     node = queue.pop(0)
+    #     #     if node not in visited:
+    #     #         visited.add(node)
+    #     #         order.append(node)
+    #     #         neighbors = self.get_neighbors(node)
+         pass
+
+    def to_adj_matrix(self):
+        nodes = self.get_nodes()
+        index = {node: i for i, node in enumerate(nodes)}
+        size = len(nodes)
+        matrix = [[0 for _ in range(size)] for _ in range(size)]
+        for from_node, neighbors in self.adj_list.items():
+            for to_node in neighbors:
+                if isinstance(to_node, tuple):
+                    to, weight = to_node 
+                    matrix[index[from_node]][index[to]] = weight
+                else:
+                    matrix[index[from_node]][index[to_node]] = 1
+        return matrix
+
+
 
 if __name__ == "__main__":
     myGraph = Graph()
@@ -119,9 +135,11 @@ if __name__ == "__main__":
 
 
     print(myGraph.__repr__)
-                
+    print(myGraph.adj_list)
 
-
+    import numpy as np
+    print(myGraph.get_nodes())
+    print(np.array(myGraph.to_adj_matrix()))
 
 
 
