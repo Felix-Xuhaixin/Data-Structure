@@ -17,7 +17,7 @@ class MinHeap:
         return str(self.heap)
     
     def insert(self, key, value):
-        self.heap.append((key,value))
+        self.heap.append([key,value])
         self._sift_up(len(self.heap)-1) # the last one index
     
     def peek_min(self):
@@ -29,7 +29,7 @@ class MinHeap:
         if not self.heap:
             raise IndexError('Empty heap')
         min_element = self.heap[0]
-        last_element = self.heap[len(self.heap)-1]  
+        last_element = self.heap.pop() # extract the last element 
         
         if self.heap: # not the empty list
             self.heap[0] = last_element
@@ -100,9 +100,18 @@ class MinHeap:
 if __name__ == "__main__":
     myHeap = MinHeap()
     myHeap.heapify([[10,'10'],[9,'9'],[8,'8'],[7,'7'],[6,'6'],[5,'5'],[4,'4'],[3,'3'],[2,'2'],[1,'1']])
+    
     print(myHeap)   
-
     import heapq
     mylist =[10,9,8,7,6,5,4,3,2,1]
     heapq.heapify(mylist)
     print(mylist)
+
+    print(myHeap.extract_min())
+    print(myHeap.extract_min())
+    print(myHeap.extract_min())
+    myHeap.insert(3,'Felix')
+     
+    print(myHeap)
+    
+    
