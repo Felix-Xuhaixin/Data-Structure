@@ -96,17 +96,44 @@ class Graph:
         
 
     def bfs(self,start):
-    #     # visited = set()
-    #     # queue = [start]
-    #     # order = []
+        visited = set()
+        queue = [start]
+        order = []
 
-    #     # while queue:
-    #     #     node = queue.pop(0)
-    #     #     if node not in visited:
-    #     #         visited.add(node)
-    #     #         order.append(node)
-    #     #         neighbors = self.get_neighbors(node)
-         pass
+        while queue:
+            node = queue.pop(0) #Remove and return the 
+            if node not in visited:
+                visited.add(node)
+                order.append(node)
+                neighbors = self.get_neighbors(node)
+                for neighbor in neighbors :
+                    if isinstance(neighbor,tuple):
+                        neighbor = neighbor[0]
+                    if neighbor not in visited:
+                        queue.append(neighbor)
+        
+        return order
+      
+
+    def dfs(self,start):
+        visited = set()
+        stack = [start]
+        order = []
+
+        while stack:
+            node = stack.pop(0)
+            if node not in visited:
+                visited.add(node)
+                order.append(node)
+                neighbors = self.get_neighbors(node)
+                for neighbor in sorted(neighbors, reverse = True) :
+                    if isinstance(neighbor,tuple):
+                        neighbor = neighbor[0]
+                    if neighbor not in visited:
+                        stack.append(neighbor)
+        
+        return order
+      
 
     def to_adj_matrix(self):
         nodes = self.get_nodes()
@@ -122,6 +149,29 @@ class Graph:
                     matrix[index[from_node]][index[to_node]] = 1
         return matrix
 
+    def dijkstra(self,start):
+        import heapq
+        distances = {node:float('inf') for node in self.adj_list}
+        distances[start] = 0
+        heap = [(0, start)]
+        while heap:
+            current_distance, current_node = heapq.heappop(heap)
+            if current_distance > distances[current_node]:
+                continue
+            neighbors = self.adj_list.get(current_node,set())
+            for neighbor in neighbors:
+                if isinstance(neighbor, tuple):
+                    to, weight = neighbor
+                else:
+                    to, weight = neighbor, 1
+                distance =  current_distance + weight
+                if distance < distances[to]:
+                    distances[to] = distance
+                    heapq.heappush(heap, (distance,to))
+        return distances
+
+
+
 
 
 if __name__ == "__main__":
@@ -132,7 +182,9 @@ if __name__ == "__main__":
     myGraph.add_edge('D','E',18)
     myGraph.add_edge('C','D',13)
     myGraph.add_edge('E','F',115)
-
+    myGraph.add_edge('B','D',5)
+    myGraph.add_edge('F','D',88)
+    
 
     print(myGraph.__repr__)
     print(myGraph.adj_list)
@@ -141,6 +193,8 @@ if __name__ == "__main__":
     print(myGraph.get_nodes())
     print(np.array(myGraph.to_adj_matrix()))
 
+    print("Dijkstra from A:", myGraph.dijkstra('A'))
+    print(myGraph.bfs('A'))
 
 
 
